@@ -14,10 +14,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-         window = UIWindow(windowScene: windowScene)
-         window?.rootViewController = OnboardingViewController()
-         window?.makeKeyAndVisible()
-//         window?.overrideUserInterfaceStyle = .light
+        window = UIWindow(windowScene: windowScene)
+        let rootVC = UINavigationController()
+        let factory = ViewControllersFactory()
+        let coordinator = MainCoordinator(navCon: rootVC, controllersFactory: factory)
+        let mainVC = factory.makeMainViewController(coordinator: coordinator)
+        rootVC.pushViewController(mainVC, animated: true)
+        window?.rootViewController = rootVC
+        window?.makeKeyAndVisible()
+        window?.overrideUserInterfaceStyle = .light
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

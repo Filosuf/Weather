@@ -10,6 +10,9 @@ import UIKit
 class OnboardingViewController: UIViewController {
 
     // MARK: - Properties
+    let coreDataManager: CoreDataManagerProtocol = CoreDataManager.shared
+    private var storageService: StorageProtocol
+
     private let image: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(named: "onboarding")
@@ -58,19 +61,38 @@ class OnboardingViewController: UIViewController {
         button.setTitle("НЕТ, Я БУДУ ДОБАВЛЯТЬ ЛОКАЦИИ", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-//        button.backgroundColor = .Settings.orange
-//        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .Settings.orange
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(notAgreeButtonTap), for: .touchUpInside)
         return button
     }()
 
     // MARK: - LifeCycle
+    init(storageService: StorageProtocol) {
+        self.storageService = storageService
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.backgroundColor = .Custom.blue
+        //        view.backgroundColor = .Custom.blue
         view.backgroundColor = .darkGray
-        GeocodingService().fetchCoordinates(for: "Москва") { _ in }
-        ForecastService().fetchForecast(lat: "61.07006", lon: "42.09830")
+//        GeocodingService().fetchLocations(for: "Москва") { _ in }
+//        ForecastService().fetchForecast(lat: "61.07006", lon: "42.09830") { [weak self] result in
+//            switch result {
+//            case .success(let forecast):
+//                self?.coreDataManager.save(forecast, locationName: "Moscow")
+//            case .failure(_):
+//                return
+//            }
+//        }
+//        let weatherMoscow = coreDataManager.getForecast(locationName: "Moscow")
+//        print(weatherMoscow?.locationName)
+//        print(weatherMoscow?.fact?.feelsLike)
         layout()
     }
 
@@ -82,14 +104,13 @@ class OnboardingViewController: UIViewController {
 
     @objc private func notAgreeButtonTap() {
         print("Не согласен")
+        self.storageService.firstRunCompleted = true
+        navigationController?.popViewController(animated: true)
     }
 
     private func layout() {
 
-        [image,
-         titleLabel,
-         annotationLabel,
-         agreeButton,
+        [
          notAgreeButton
         ].forEach { view.addSubview($0)}
 

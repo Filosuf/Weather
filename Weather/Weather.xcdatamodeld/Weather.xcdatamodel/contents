@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="20G527" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Forecast" representedClassName="Forecast" syncable="YES" codeGenerationType="class">
-        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="date" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="locationName" optional="YES" attributeType="String"/>
         <attribute name="moonCode" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="sunrise" optional="YES" attributeType="String"/>
         <attribute name="sunset" optional="YES" attributeType="String"/>
@@ -10,26 +11,32 @@
         <relationship name="nightShort" maxCount="1" deletionRule="Nullify" destinationEntity="Indicators"/>
     </entity>
     <entity name="Indicators" representedClassName="Indicators" syncable="YES" codeGenerationType="class">
-        <attribute name="condition" attributeType="String"/>
-        <attribute name="feelsLike" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="condition" optional="YES" attributeType="String"/>
+        <attribute name="feelsLike" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="hour" optional="YES" attributeType="String"/>
         <attribute name="hourTs" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="precProb" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="temp" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="precProb" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="temp" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="tempMin" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="uvIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="windDir" attributeType="String"/>
-        <attribute name="windSpeed" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="windDir" optional="YES" attributeType="String"/>
+        <attribute name="windSpeed" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="TimeZoneInfo" representedClassName="TimeZoneInfo" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="offset" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <entity name="Weather" representedClassName="Weather" syncable="YES" codeGenerationType="class">
         <attribute name="locationName" optional="YES" attributeType="String"/>
-        <attribute name="uploadTime" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="uploadTime" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <relationship name="fact" maxCount="1" deletionRule="Nullify" destinationEntity="Indicators"/>
-        <relationship name="forecasts" maxCount="1" deletionRule="Nullify" destinationEntity="Forecast"/>
+        <relationship name="forecasts" toMany="YES" deletionRule="Nullify" destinationEntity="Forecast"/>
+        <relationship name="timeZone" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TimeZoneInfo"/>
     </entity>
     <elements>
-        <element name="Weather" positionX="90" positionY="203.5" width="128" height="14"/>
-        <element name="Indicators" positionX="90" positionY="403" width="128" height="14"/>
-        <element name="Forecast" positionX="180" positionY="277.5" width="128" height="14"/>
+        <element name="Forecast" positionX="180" positionY="277.5" width="128" height="149"/>
+        <element name="Indicators" positionX="90" positionY="403" width="128" height="179"/>
+        <element name="Weather" positionX="90" positionY="203.5" width="128" height="104"/>
+        <element name="TimeZoneInfo" positionX="135" positionY="360" width="128" height="59"/>
     </elements>
 </model>

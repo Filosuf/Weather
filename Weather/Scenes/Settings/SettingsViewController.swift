@@ -9,7 +9,7 @@ import UIKit
 
 class SettingsViewController: UIViewController {
 
-    private let storageService = SettingsStorageService()
+    private var storageService: StorageProtocol
 
     private let settingLabel: UILabel = {
         let label = UILabel()
@@ -146,6 +146,15 @@ class SettingsViewController: UIViewController {
     }()
 
     // MARK: - LifeCycle
+    init(storageService: StorageProtocol) {
+        self.storageService = storageService
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .Custom.blue

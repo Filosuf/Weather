@@ -10,12 +10,14 @@ import Foundation
 struct ForecastResult: Codable {
     let now: Int
     let nowDt: String
+    let info: InfoCodable
     let fact: IndicatorsCodable
     let forecasts: [ForecastCodable]
 
     enum CodingKeys: String, CodingKey {
         case now
         case nowDt = "now_dt"
+        case info
         case fact, forecasts
     }
 }
@@ -72,4 +74,16 @@ struct Parts: Codable {
         case nightShort = "night_short"
         case dayShort = "day_short"
     }
+}
+
+// MARK: - InfoCodable
+struct InfoCodable: Codable {
+    let lat, lon: Double
+    let tzinfo: TzinfoCodable
+}
+
+// MARK: - TzinfoCodable
+struct TzinfoCodable: Codable {
+    let name: String
+    let offset: Int
 }

@@ -10,11 +10,205 @@ import UIKit
 class MainViewController: UIViewController {
 
     // MARK: - Properties
+    private let storageService: StorageProtocol
+    private let coordinator: MainCoordinator
+    private let coreDataManager = CoreDataManager.shared
+
+    var slides:[OverviewSlideView] = []
+
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.delegate = self
+        return scrollView
+    }()
+
+    private lazy var pageControl: UIPageControl = {
+        let pageControl = UIPageControl()
+        pageControl.backgroundColor = .systemMint
+        pageControl.tintColor = .black
+        pageControl.pageIndicatorTintColor = .black
+        pageControl.currentPageIndicatorTintColor = .white
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        return pageControl
+    }()
 
     // MARK: - LifeCycle
+    init(storageService: StorageProtocol, coordinator: MainCoordinator) {
+        self.storageService = storageService
+        self.coordinator = coordinator
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
+        if !storageService.firstRunCompleted {
+            coordinator.showOnboarding()
+        }
+//        loadWeather()
+
+        //Slides
+        layout()
+        slides = createSlides()
+        setupSlideScrollView(slides: slides)
+
+        pageControl.numberOfPages = slides.count
+        pageControl.currentPage = 0
+        pageControl.setIndicatorImage(UIImage(systemName: "heart.fill"), forPage: 0)
+        view.bringSubviewToFront(pageControl)
+
+        navigationController?.pushViewController(TimeOfDayForecastsViewController(), animated: true)
     }
 
     // MARK: - Methods
+    func createSlides() -> [OverviewSlideView] {
+
+        let slide1 = OverviewSlideView(name: "first")
+        let slide2 = OverviewSlideView(name: "second")
+        let slide3 = OverviewSlideView(name: "third")
+
+        return [slide1, slide2, slide3]
+    }
+
+
+    func setupSlideScrollView(slides : [OverviewSlideView]) {
+        scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        scrollView.contentSize = CGSize(width: view.frame.width * CGFloat(slides.count), height: view.frame.height)
+        scrollView.isPagingEnabled = true
+
+        for i in 0 ..< slides.count {
+            slides[i].frame = CGRect(x: view.frame.width * CGFloat(i), y: 0, width: view.frame.width, height: view.frame.height)
+            scrollView.addSubview(slides[i])
+        }
+    }
+
+    private func layout() {
+
+        [scrollView,
+        pageControl].forEach { view.addSubview($0) }
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pageControl.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            pageControl.heightAnchor.constraint(equalToConstant: 100),
+            pageControl.widthAnchor.constraint(equalToConstant: 300)
+        ])
+    }
+
+    //MARK: - Debug
+    private func loadWeather() {
+        ForecastService().fetchForecast(lat: "61.07006", lon: "42.09830") { [weak self] result in
+            switch result {
+            case .success(let forecast):
+                self?.coreDataManager.save(forecast, locationName: "Moscow")
+            case .failure(_):
+                return
+            }
+        }
+        ForecastService().fetchForecast(lat: "59.9386", lon: "30.3141") { [weak self] result in
+            switch result {
+            case .success(let forecast):
+                self?.coreDataManager.save(forecast, locationName: "SPb")
+            case .failure(_):
+                return
+            }
+        }
+    }
+
+    private func testFetching() {
+        let factMoscow = coreDataManager.getFact(locationName: "Moscow")
+        print(factMoscow?.temp as Any)
+        print(Date().timeIntervalSince1970)
+        let forecastMoscow = coreDataManager.getForecasts(locationName: "Moscow")
+        print(forecastMoscow.first?.locationName as Any)
+        print(forecastMoscow.count as Any)
+//        for forecast in forecastMoscow {
+//            print(forecast.date as Any)
+//            print(forecast.sunrise as Any)
+//        }
+        let date = Date().timeIntervalSince1970
+        for forecast in forecastMoscow {
+            print("Date = \(Date(timeIntervalSince1970: forecast.date))")
+            for hourForecast in forecast.hoursSorted {
+//                print("Count = \(hourForecasts.count)")
+                print("date = \(hourForecast.hourTs)")
+                if hourForecast.hourTs > date {
+                    print(">")
+                }
+            }
+        }
+        let hoursForecasts = coreDataManager.getHourForecasts(locationName: "Moscow")
+        for hoursForecast in hoursForecasts {
+            let date = Date(timeIntervalSince1970: hoursForecast.hourTs)
+            print(date as Any)
+            print(hoursForecast.temp as Any)
+        }
+        //        if let hoursForecast = weatherMoscow?.forecastsSorted.first?.hoursSorted {
+        //            for hour in hoursForecast {
+//                print(hour.hour)
+//                print(hour.hourTs)
+//                let calendar = Calendar(identifier: .gregorian)
+//                let timeZone: TimeZone = .current
+//                let dateComponents = calendar.dateComponents(in: timeZone, from: Date(timeIntervalSince1970: hour.hourTs))
+//                print("Day = \(dateComponents.day)")
+//                print(dateComponents.hour)
+//            }
+//        }
+//        let date = Date()
+//        print(date)
+    }
+}
+
+extension MainViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let pageIndex = round(scrollView.contentOffset.x/view.frame.width)
+        pageControl.currentPage = Int(pageIndex)
+    }
+
+    func scrollView(_ scrollView: UIScrollView, didScrollToPercentageOffset percentageHorizontalOffset: CGFloat) {
+        if(pageControl.currentPage == 0) {
+            //Change background color to toRed: 103/255, fromGreen: 58/255, fromBlue: 183/255, fromAlpha: 1
+            //Change pageControl selected color to toRed: 103/255, toGreen: 58/255, toBlue: 183/255, fromAlpha: 0.2
+            //Change pageControl unselected color to toRed: 255/255, toGreen: 255/255, toBlue: 255/255, fromAlpha: 1
+
+            let pageUnselectedColor: UIColor = fade(fromRed: 255/255, fromGreen: 255/255, fromBlue: 255/255, fromAlpha: 1, toRed: 103/255, toGreen: 58/255, toBlue: 183/255, toAlpha: 1, withPercentage: percentageHorizontalOffset * 3)
+            pageControl.pageIndicatorTintColor = pageUnselectedColor
+
+
+            let bgColor: UIColor = fade(fromRed: 103/255, fromGreen: 58/255, fromBlue: 183/255, fromAlpha: 1, toRed: 255/255, toGreen: 255/255, toBlue: 255/255, toAlpha: 1, withPercentage: percentageHorizontalOffset * 3)
+            slides[pageControl.currentPage].backgroundColor = bgColor
+
+            let pageSelectedColor: UIColor = fade(fromRed: 81/255, fromGreen: 36/255, fromBlue: 152/255, fromAlpha: 1, toRed: 103/255, toGreen: 58/255, toBlue: 183/255, toAlpha: 1, withPercentage: percentageHorizontalOffset * 3)
+            pageControl.currentPageIndicatorTintColor = pageSelectedColor
+        }
+    }
+
+
+    func fade(fromRed: CGFloat,
+              fromGreen: CGFloat,
+              fromBlue: CGFloat,
+              fromAlpha: CGFloat,
+              toRed: CGFloat,
+              toGreen: CGFloat,
+              toBlue: CGFloat,
+              toAlpha: CGFloat,
+              withPercentage percentage: CGFloat) -> UIColor {
+
+        let red: CGFloat = (toRed - fromRed) * percentage + fromRed
+        let green: CGFloat = (toGreen - fromGreen) * percentage + fromGreen
+        let blue: CGFloat = (toBlue - fromBlue) * percentage + fromBlue
+        let alpha: CGFloat = (toAlpha - fromAlpha) * percentage + fromAlpha
+
+        // return the fade colour
+        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+    }
 }
