@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class HourCollectionViewDataSource: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
+final class HourCollectionViewDataSource: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
 //    let forecast: [Indicators]
 //
@@ -39,9 +39,9 @@ final class HourCollectionViewDataSource: NSObject, UICollectionViewDataSource, 
 //        sideInset
 //    }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: sideInset, left: sideInset, bottom: sideInset, right: sideInset)
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        UIEdgeInsets(top: 0, left: sideInset, bottom: 0, right: sideInset)
+//    }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //selected cell

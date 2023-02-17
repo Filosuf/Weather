@@ -124,10 +124,14 @@ class MainViewController: UIViewController {
         coordinator.showAddLocation()
     }
 
+    private let hourCollectionViewDataSource = HourCollectionViewDataSource()
+    private let dayCollectionViewDataSource = DayForecastCollectionViewDataSource()
+
     func createSlides(locations: [Location]) -> [OverviewSlideView] {
         var slidesArray = [OverviewSlideView]()
         for location in locations {
             let slide = OverviewSlideView(locationName: location.name)
+            slide.setupCollectionViews(hourDataSource: hourCollectionViewDataSource, hourDelegate: hourCollectionViewDataSource, dayDataSource: dayCollectionViewDataSource, dayDataDelegate: dayCollectionViewDataSource)
             slidesArray.append(slide)
         }
         return slidesArray

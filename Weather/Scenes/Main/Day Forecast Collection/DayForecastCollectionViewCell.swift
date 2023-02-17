@@ -12,8 +12,8 @@ final class DayForecastCollectionViewCell: UICollectionViewCell {
 
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 18)
+        label.textColor = .Text.textSecond
+        label.font = UIFont(name: "Rubik-Regular", size: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -26,43 +26,49 @@ final class DayForecastCollectionViewCell: UICollectionViewCell {
 
     private let probabilityOfPrecipitationLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 18)
+        label.textColor = .Main.blueSecond
+        label.font = UIFont.systemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
     private let conditionLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 18)
+        label.textColor = .Text.text
+        label.font = UIFont.systemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
     private let tempLabel: UILabel = {
-            let label = UILabel()
-            label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-            label.font = UIFont(name: "Rubik-Regular", size: 18)
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
+        let label = UILabel()
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     private let arrowImage: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(systemName: "arrow")
+        image.image = UIImage(systemName: "chevron.right")
+        image.tintColor = .black
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .blue
+        settingCell()
         layout()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private func settingCell() {
+        backgroundColor = .Main.backgroundDayCell
+        layer.cornerRadius = 5
     }
 
     func setupCell(date: String) {
@@ -74,24 +80,34 @@ final class DayForecastCollectionViewCell: UICollectionViewCell {
     }
 
     private func layout() {
-        let interval: CGFloat = 5
-        [dateLabel].forEach { contentView.addSubview($0) }
+        let interval: CGFloat = 10
+        [dateLabel,
+         conditionImage,
+         probabilityOfPrecipitationLabel,
+         conditionLabel,
+         tempLabel,
+         arrowImage
+        ].forEach { contentView.addSubview($0) }
 
         NSLayoutConstraint.activate([
-            dateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: interval),
+            dateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
             dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: interval),
+            dateLabel.heightAnchor.constraint(equalToConstant: 20),
 
-            conditionImage.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: interval),
+            conditionImage.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 6),
             conditionImage.leadingAnchor.constraint(equalTo: dateLabel.leadingAnchor),
 
             probabilityOfPrecipitationLabel.trailingAnchor.constraint(equalTo: dateLabel.trailingAnchor),
             probabilityOfPrecipitationLabel.centerYAnchor.constraint(equalTo: conditionImage.centerYAnchor),
+            probabilityOfPrecipitationLabel.heightAnchor.constraint(equalToConstant: 16),
 
             conditionLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             conditionLabel.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: interval),
+            conditionLabel.heightAnchor.constraint(equalToConstant: 20),
 
             tempLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             tempLabel.trailingAnchor.constraint(equalTo: arrowImage.leadingAnchor, constant: -interval),
+            tempLabel.heightAnchor.constraint(equalToConstant: 23),
 
             arrowImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             arrowImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -interval)

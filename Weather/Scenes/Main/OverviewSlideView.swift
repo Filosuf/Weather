@@ -22,18 +22,16 @@ final class OverviewSlideView: UIView {
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .systemGray6
+        collectionView.backgroundColor = .white
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(HourCollectionViewCell.self, forCellWithReuseIdentifier: HourCollectionViewCell.identifier)
-//        collectionView.dataSource = self
-//        collectionView.delegate = self
         return collectionView
     }()
     
     private let dayForecastLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Bold", size: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 18)
         label.text = "Ежедневный прогноз"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -58,11 +56,9 @@ final class OverviewSlideView: UIView {
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .systemGray6
+        collectionView.backgroundColor = .white
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(DayForecastCollectionViewCell.self, forCellWithReuseIdentifier: DayForecastCollectionViewCell.identifier)
-//        collectionView.dataSource = self
-//        collectionView.delegate = self
         return collectionView
     }()
 
@@ -126,8 +122,8 @@ final class OverviewSlideView: UIView {
 
             hourForecastCollectionView.topAnchor.constraint(equalTo: hourForecastDetailButton.bottomAnchor, constant: 24),
             hourForecastCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            hourForecastCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            hourForecastCollectionView.heightAnchor.constraint(equalToConstant: 80),
+            hourForecastCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            hourForecastCollectionView.heightAnchor.constraint(equalToConstant: 84),
 
             dayForecastLabel.topAnchor.constraint(equalTo: hourForecastCollectionView.bottomAnchor, constant: 24),
             dayForecastLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),

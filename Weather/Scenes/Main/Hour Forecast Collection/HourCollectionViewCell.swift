@@ -13,8 +13,8 @@ final class HourCollectionViewCell: UICollectionViewCell {
 
     private let timeLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 18)
+        label.textColor = .Text.text
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -27,8 +27,8 @@ final class HourCollectionViewCell: UICollectionViewCell {
 
     private let tempLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 18)
+        label.textColor = .Text.textGray
+        label.font = UIFont.systemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -37,8 +37,8 @@ final class HourCollectionViewCell: UICollectionViewCell {
         didSet{
             if self.isSelected {
                 UIView.animate(withDuration: 0.3) {
-                    self.backgroundColor = .Main.selectHourCell
-                    self.layer.borderColor = UIColor.Main.selectHourCell.cgColor
+                    self.backgroundColor = .Main.blueSecond
+                    self.layer.borderColor = UIColor.Main.blueSecond.cgColor
                 }
             }
             else {
@@ -77,17 +77,22 @@ final class HourCollectionViewCell: UICollectionViewCell {
 
     private func layout() {
         let interval: CGFloat = 5
-        [timeLabel].forEach { contentView.addSubview($0) }
+        [timeLabel,
+        conditionImage,
+        tempLabel
+        ].forEach { contentView.addSubview($0) }
 
         NSLayoutConstraint.activate([
             timeLabel.bottomAnchor.constraint(equalTo: conditionImage.topAnchor, constant: -interval),
             timeLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            timeLabel.heightAnchor.constraint(equalToConstant: 18),
 
             conditionImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             conditionImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
 
             tempLabel.topAnchor.constraint(equalTo: conditionImage.bottomAnchor, constant: interval),
             tempLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            tempLabel.heightAnchor.constraint(equalToConstant: 18)
         ])
     }
 }
