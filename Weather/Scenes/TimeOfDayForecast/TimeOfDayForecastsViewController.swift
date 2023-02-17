@@ -31,6 +31,21 @@ final class TimeOfDayForecastsViewController: UIViewController {
         return view
     }()
 
+    private let sunAndMoonView: SunAndMoonView = {
+        let view = SunAndMoonView()
+        view.setIndicator()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private let factSubview: FactIndicatorsSubview = {
+        let view = FactIndicatorsSubview()
+        view.setupView(condition: UIImage(named: "moon")!, wind: "wind", rain: "10%")
+        view.backgroundColor = .blue
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
 // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +56,7 @@ final class TimeOfDayForecastsViewController: UIViewController {
     private func layout() {
 
         indicatorView.translatesAutoresizingMaskIntoConstraints = false
-        [indicatorView].forEach { view.addSubview($0) }
+        [factSubview].forEach { view.addSubview($0) }
 
         NSLayoutConstraint.activate([
 //            dateCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -49,10 +64,10 @@ final class TimeOfDayForecastsViewController: UIViewController {
 //            dateCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 //            dateCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
-            indicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            indicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            indicatorView.heightAnchor.constraint(equalToConstant: 200),
-            indicatorView.widthAnchor.constraint(equalToConstant: view.frame.width)
+            factSubview.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            factSubview.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            factSubview.heightAnchor.constraint(equalToConstant: 200),
+            factSubview.widthAnchor.constraint(equalToConstant: 200)
         ])
     }
 }

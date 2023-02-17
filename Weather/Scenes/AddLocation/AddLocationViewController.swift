@@ -14,6 +14,7 @@ class AddLocationViewController: UIViewController {
     private let storageService = SettingsStorageService()
     private let searchController = UISearchController(searchResultsController: nil)
     private var searchLocations = [Location]()
+    private var coordinator: MainCoordinator
 
     fileprivate lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -24,7 +25,8 @@ class AddLocationViewController: UIViewController {
     }()
 
     //MARK: - LifeCicle
-    init() {
+    init(coordinator: MainCoordinator) {
+        self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -92,5 +94,6 @@ extension AddLocationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectLocation = searchLocations[indexPath.row]
         storageService.addLocation(selectLocation)
+        coordinator.pop()
     }
 }

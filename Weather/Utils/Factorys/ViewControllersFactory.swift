@@ -34,11 +34,15 @@ final class ViewControllersFactory {
         let viewController = SettingsViewController(storageService: storageService)
         return viewController
     }
-    
-    //    func makeLoginViewController(coordinator: ProfileFlowCoordinator) -> LogInViewController {
-    //        let viewModel = LoginViewModel(loginFactory: loginFactory, coordinator: coordinator)
-    //        let logInVC = LogInViewController(viewModel: viewModel)
-    //        return logInVC
+
+    func makeAddLocationViewController(coordinator: MainCoordinator) -> AddLocationViewController {
+        let viewController = AddLocationViewController(coordinator: coordinator)
+        return viewController
+    }
+
+//    func makeHourlyForecastViewController(coordinator: MainCoordinator) -> HourlyForecastViewController {
+//        let viewController = HourlyForecastViewController(coordinator: coordinator)
+//        return viewController
 //    }
 
 }

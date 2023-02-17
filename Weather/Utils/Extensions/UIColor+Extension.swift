@@ -13,6 +13,11 @@ extension UIColor {
         static var naturalWhite: UIColor { UIColor(named: "naturalWhite")! }
     }
 
+    enum Main {
+        static var borderHourCell: UIColor { UIColor(named: "borderHourCell")! }
+        static var selectHourCell: UIColor { UIColor(named: "selectHourCell")! }
+    }
+
     enum Settings {
         static var gray: UIColor { UIColor(named: "settingsNameGray")! }
         static var white: UIColor { UIColor(named: "settingsNameWhite")! }

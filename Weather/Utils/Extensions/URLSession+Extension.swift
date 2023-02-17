@@ -46,10 +46,8 @@ extension URLSession {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
             let responseBody = try decoder.decode(T.self, from: data)
-            print(responseBody)
             return .success(responseBody)
         } catch {
-            print("Error decoding")
             return .failure(NetworkError.decodeError)
         }
     }

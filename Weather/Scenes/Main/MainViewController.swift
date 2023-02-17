@@ -14,11 +14,13 @@ class MainViewController: UIViewController {
     private let coordinator: MainCoordinator
     private let coreDataManager = CoreDataManager.shared
 
-    var slides:[OverviewSlideView] = []
+    private var slides: [OverviewSlideView] = []
+    private var locations: [Location] = []
 
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.delegate = self
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
 
@@ -45,38 +47,95 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        if !storageService.firstRunCompleted {
-            coordinator.showOnboarding()
+        view.backgroundColor = .systemBackground
+        setupNavigationBar()
+        //onboarding
+//        if !storageService.firstRunCompleted {
+//            coordinator.showOnboarding()
+//        }
+        //load list locations
+        if let locations = storageService.getLocations() {
+            self.locations = locations
+            slides = createSlides(locations: locations)
+            setupSlides()
         }
-//        loadWeather()
+        loadWeather()
 
-        //Slides
+        getFactDebug()
+        
         layout()
-        slides = createSlides()
+//        navigationController?.pushViewController(TimeOfDayForecastsViewController(), animated: true)
+    }
+
+    // MARK: - Methods
+    private func loadForecast(index: Int) {
+        guard index < locations.count else { return }
+        let location = locations[index]
+        let lat = location.lat
+        let lon = location.lon
+        let locationName = location.name
+        ForecastService().fetchForecast(lat: lat, lon: lon) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let forecast):
+                self.coreDataManager.save(forecast, locationName: locationName)
+            case .failure(_):
+                return
+            }
+//            if index < self.locations.count - 1 {
+                self.loadForecast(index: index + 1)
+//            }
+        }
+    }
+
+    private func loadWeather() {
+        let index = 0
+        loadForecast(index: index)
+    }
+
+    private func getFactDebug() {
+        for location in locations {
+            let fact = coreDataManager.getFact(locationName: location.name)
+            print(fact?.temp as Any)
+            let forecasts = coreDataManager.getForecasts(locationName: location.name)
+            print("forecasts.count = \(forecasts.count)")
+            print(Date())
+            for forecast in forecasts {
+                print(Date(timeIntervalSince1970: forecast.date))
+                print("hours.count = \(forecasts.first?.hoursSorted.count)")
+            }
+        }
+    }
+    private func setupSlides() {
         setupSlideScrollView(slides: slides)
 
         pageControl.numberOfPages = slides.count
         pageControl.currentPage = 0
         pageControl.setIndicatorImage(UIImage(systemName: "heart.fill"), forPage: 0)
-        view.bringSubviewToFront(pageControl)
-
-        navigationController?.pushViewController(TimeOfDayForecastsViewController(), animated: true)
+//        view.bringSubviewToFront(pageControl)
     }
 
-    // MARK: - Methods
-    func createSlides() -> [OverviewSlideView] {
+    private func setupNavigationBar() {
+        title = "NavVC"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain, target: self, action: #selector(dismissSelf))
+    }
 
-        let slide1 = OverviewSlideView(name: "first")
-        let slide2 = OverviewSlideView(name: "second")
-        let slide3 = OverviewSlideView(name: "third")
+    @objc private func dismissSelf() {
+        coordinator.showAddLocation()
+    }
 
-        return [slide1, slide2, slide3]
+    func createSlides(locations: [Location]) -> [OverviewSlideView] {
+        var slidesArray = [OverviewSlideView]()
+        for location in locations {
+            let slide = OverviewSlideView(locationName: location.name)
+            slidesArray.append(slide)
+        }
+        return slidesArray
     }
 
 
     func setupSlideScrollView(slides : [OverviewSlideView]) {
-        scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+//        scrollView.frame.size = CGSize(width: view.frame.width, height: view.frame.height)
         scrollView.contentSize = CGSize(width: view.frame.width * CGFloat(slides.count), height: view.frame.height)
         scrollView.isPagingEnabled = true
 
@@ -92,37 +151,18 @@ class MainViewController: UIViewController {
         pageControl].forEach { view.addSubview($0) }
 
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pageControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 19),
+            pageControl.heightAnchor.constraint(equalToConstant: 10),
+
+            scrollView.topAnchor.constraint(equalTo: pageControl.bottomAnchor, constant: 10),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pageControl.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            pageControl.heightAnchor.constraint(equalToConstant: 100),
-            pageControl.widthAnchor.constraint(equalToConstant: 300)
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
     //MARK: - Debug
-    private func loadWeather() {
-        ForecastService().fetchForecast(lat: "61.07006", lon: "42.09830") { [weak self] result in
-            switch result {
-            case .success(let forecast):
-                self?.coreDataManager.save(forecast, locationName: "Moscow")
-            case .failure(_):
-                return
-            }
-        }
-        ForecastService().fetchForecast(lat: "59.9386", lon: "30.3141") { [weak self] result in
-            switch result {
-            case .success(let forecast):
-                self?.coreDataManager.save(forecast, locationName: "SPb")
-            case .failure(_):
-                return
-            }
-        }
-    }
 
     private func testFetching() {
         let factMoscow = coreDataManager.getFact(locationName: "Moscow")

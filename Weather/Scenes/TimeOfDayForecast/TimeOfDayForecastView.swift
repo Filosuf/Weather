@@ -10,8 +10,6 @@ import UIKit
 
 final class TimeOfDayForecastView: UIView {
     // MARK: - Properties
-    static let identifier = "HourlyForecastTableViewCell"
-
     private let timeOfDayLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)

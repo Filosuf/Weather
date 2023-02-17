@@ -10,6 +10,8 @@ import UIKit
 
 final class HourlyForecastViewController: UIViewController {
     // MARK: - Properties
+//    let coordinator: MainCoordinator
+    
     let indicatorView = HourlyForecastIndicatorView()
 
     private lazy var tableView: UITableView = {

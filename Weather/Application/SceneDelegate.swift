@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let factory = ViewControllersFactory()
         let coordinator = MainCoordinator(navCon: rootVC, controllersFactory: factory)
         let mainVC = factory.makeMainViewController(coordinator: coordinator)
+//        let mainVC = UINavigationController(rootViewController: MainViewController(storageService: SettingsStorageService(), coordinator: coordinator))
         rootVC.pushViewController(mainVC, animated: true)
         window?.rootViewController = rootVC
         window?.makeKeyAndVisible()

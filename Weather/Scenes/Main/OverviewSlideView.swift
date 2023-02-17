@@ -10,24 +10,68 @@ import UIKit
 final class OverviewSlideView: UIView {
 
     //MARK: - Properties
- private let nameLabel: UILabel = {
+    private let factView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemBlue
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
+    private lazy var hourForecastCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .systemGray6
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(HourCollectionViewCell.self, forCellWithReuseIdentifier: HourCollectionViewCell.identifier)
+//        collectionView.dataSource = self
+//        collectionView.delegate = self
+        return collectionView
+    }()
+    
+    private let dayForecastLabel: UILabel = {
         let label = UILabel()
-        label.text = "User name"
-        label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
+        label.font = UIFont(name: "Rubik-Bold", size: 18)
+        label.text = "Ежедневный прогноз"
         label.translatesAutoresizingMaskIntoConstraints = false
-
         return label
     }()
 
+    private let hourForecastDetailButton: UIButton = {
+        let button = UIButton()
+        let attributedText = NSAttributedString(
+            string: "Подробнее на 24 часа",
+            attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue]
+        )
+        button.setAttributedTitle(attributedText, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        button.titleLabel?.textAlignment = .right
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(hourForecastDetailButtonTap), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var dayForecastCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .systemGray6
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(DayForecastCollectionViewCell.self, forCellWithReuseIdentifier: DayForecastCollectionViewCell.identifier)
+//        collectionView.dataSource = self
+//        collectionView.delegate = self
+        return collectionView
+    }()
+
     //MARK: - LifeCicle
-    init(name: String) {
+    init(locationName: String) {
         super.init(frame: CGRect.zero)
         backgroundColor = .white
         layout()
-//        taps()
-        setupView(locationName: name)
+        //        taps()
     }
 
     required init?(coder aDecoder: NSCoder)
@@ -36,6 +80,9 @@ final class OverviewSlideView: UIView {
     }
 
     //MARK: - Metods
+    @objc private func hourForecastDetailButtonTap() {
+        
+    }
 //    func taps() {
 //        showStatusButton.tapAction =  { [weak self] in
 //            self?.statusLabel.text = self?.statusText
@@ -48,19 +95,48 @@ final class OverviewSlideView: UIView {
 //
 //    }
 
-    func setupView(locationName: String) {
-        nameLabel.text = locationName
+    func setupCollectionViews(hourDataSource: UICollectionViewDataSource,
+                              hourDelegate: UICollectionViewDelegate,
+                              dayDataSource: UICollectionViewDataSource,
+                              dayDataDelegate: UICollectionViewDelegate
+    ) {
+        hourForecastCollectionView.delegate = hourDelegate
+        hourForecastCollectionView.dataSource = hourDataSource
+        dayForecastCollectionView.dataSource = dayDataSource
+        dayForecastCollectionView.delegate = dayDataDelegate
     }
 
     private func layout() {
 
-        [nameLabel].forEach { self.addSubview($0) }
+        [factView,
+        hourForecastDetailButton,
+        hourForecastCollectionView,
+        dayForecastLabel,
+        dayForecastCollectionView].forEach { self.addSubview($0) }
 
         NSLayoutConstraint.activate([
-            nameLabel.heightAnchor.constraint(equalToConstant: 330),
-            nameLabel.widthAnchor.constraint(equalToConstant: 320),
-            nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            nameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            factView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            factView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            factView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            factView.heightAnchor.constraint(equalToConstant: 212),
+
+            hourForecastDetailButton.topAnchor.constraint(equalTo: factView.bottomAnchor, constant: 33),
+            hourForecastDetailButton.heightAnchor.constraint(equalToConstant: 20),
+            hourForecastDetailButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+
+            hourForecastCollectionView.topAnchor.constraint(equalTo: hourForecastDetailButton.bottomAnchor, constant: 24),
+            hourForecastCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            hourForecastCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            hourForecastCollectionView.heightAnchor.constraint(equalToConstant: 80),
+
+            dayForecastLabel.topAnchor.constraint(equalTo: hourForecastCollectionView.bottomAnchor, constant: 24),
+            dayForecastLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            dayForecastLabel.heightAnchor.constraint(equalToConstant: 22),
+
+            dayForecastCollectionView.topAnchor.constraint(equalTo: dayForecastLabel.bottomAnchor, constant: 10),
+            dayForecastCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            dayForecastCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            dayForecastCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 

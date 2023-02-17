@@ -39,6 +39,12 @@
 		7C44463E2949CB1F0018F4E7 /* CustomSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C44463D2949CB1F0018F4E7 /* CustomSwitch.swift */; };
 		7C444641294A08B50018F4E7 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C444640294A08B50018F4E7 /* UIColor+Extension.swift */; };
 		7C444644294B39AE0018F4E7 /* SettingCustomSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C444643294B39AE0018F4E7 /* SettingCustomSwitch.swift */; };
+		7C4F74D82981654B00406056 /* FactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4F74D72981654B00406056 /* FactView.swift */; };
+		7C4F74DA29816A8300406056 /* FactIndicatorsSubview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4F74D929816A8300406056 /* FactIndicatorsSubview.swift */; };
+		7C4F74DC2982633A00406056 /* DayForecastCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4F74DB2982633A00406056 /* DayForecastCollectionViewCell.swift */; };
+		7C4F7584299E5F4300406056 /* HourCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4F7583299E5F4200406056 /* HourCollectionViewCell.swift */; };
+		7C4F7589299F6CE100406056 /* HourCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4F7588299F6CE100406056 /* HourCollectionViewDataSource.swift */; };
+		7C4F758B299F6D0800406056 /* DayForecastCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4F758A299F6D0800406056 /* DayForecastCollectionViewDataSource.swift */; };
 		7C90E80E295ECD20008CD8F5 /* TestTwoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C90E80D295ECD20008CD8F5 /* TestTwoView.swift */; };
 		7C90E81129659E6E008CD8F5 /* SettingsStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C90E81029659E6E008CD8F5 /* SettingsStorageService.swift */; };
 /* End PBXBuildFile section */
@@ -78,6 +84,12 @@
 		7C44463D2949CB1F0018F4E7 /* CustomSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSwitch.swift; sourceTree = "<group>"; };
 		7C444640294A08B50018F4E7 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		7C444643294B39AE0018F4E7 /* SettingCustomSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCustomSwitch.swift; sourceTree = "<group>"; };
+		7C4F74D72981654B00406056 /* FactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactView.swift; sourceTree = "<group>"; };
+		7C4F74D929816A8300406056 /* FactIndicatorsSubview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactIndicatorsSubview.swift; sourceTree = "<group>"; };
+		7C4F74DB2982633A00406056 /* DayForecastCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayForecastCollectionViewCell.swift; sourceTree = "<group>"; };
+		7C4F7583299E5F4200406056 /* HourCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCollectionViewCell.swift; sourceTree = "<group>"; };
+		7C4F7588299F6CE100406056 /* HourCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourCollectionViewDataSource.swift; sourceTree = "<group>"; };
+		7C4F758A299F6D0800406056 /* DayForecastCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayForecastCollectionViewDataSource.swift; sourceTree = "<group>"; };
 		7C90E80D295ECD20008CD8F5 /* TestTwoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestTwoView.swift; path = Weather/TestTwoView.swift; sourceTree = SOURCE_ROOT; };
 		7C90E81029659E6E008CD8F5 /* SettingsStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStorageService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -144,6 +156,10 @@
 			children = (
 				7C24B72D2966C9BC00A795E1 /* MainViewController.swift */,
 				7C1429AD297834CC00E5820E /* OverviewSlideView.swift */,
+				7C4F7587299F67E000406056 /* Hour Forecast Collection */,
+				7C4F7585299F679500406056 /* Day Forecast Collection */,
+				7C4F74D72981654B00406056 /* FactView.swift */,
+				7C4F74D929816A8300406056 /* FactIndicatorsSubview.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -299,6 +315,24 @@
 			path = Reusable;
 			sourceTree = "<group>";
 		};
+		7C4F7585299F679500406056 /* Day Forecast Collection */ = {
+			isa = PBXGroup;
+			children = (
+				7C4F74DB2982633A00406056 /* DayForecastCollectionViewCell.swift */,
+				7C4F758A299F6D0800406056 /* DayForecastCollectionViewDataSource.swift */,
+			);
+			path = "Day Forecast Collection";
+			sourceTree = "<group>";
+		};
+		7C4F7587299F67E000406056 /* Hour Forecast Collection */ = {
+			isa = PBXGroup;
+			children = (
+				7C4F7583299E5F4200406056 /* HourCollectionViewCell.swift */,
+				7C4F7588299F6CE100406056 /* HourCollectionViewDataSource.swift */,
+			);
+			path = "Hour Forecast Collection";
+			sourceTree = "<group>";
+		};
 		7C90E80F29659DEB008CD8F5 /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -381,6 +415,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C4F7589299F6CE100406056 /* HourCollectionViewDataSource.swift in Sources */,
 				7C444644294B39AE0018F4E7 /* SettingCustomSwitch.swift in Sources */,
 				7C24B737296C131F00A795E1 /* NetworkError.swift in Sources */,
 				7C3D6D01297FFBDF00BB29C2 /* TimeOfDayForecastView.swift in Sources */,
@@ -390,15 +425,20 @@
 				7C1429A629701C2300E5820E /* AddLocationViewController.swift in Sources */,
 				7C90E81129659E6E008CD8F5 /* SettingsStorageService.swift in Sources */,
 				7C24B741296C470300A795E1 /* ForecastResult.swift in Sources */,
+				7C4F74DC2982633A00406056 /* DayForecastCollectionViewCell.swift in Sources */,
+				7C4F74DA29816A8300406056 /* FactIndicatorsSubview.swift in Sources */,
 				7C1429A9297569D600E5820E /* MainCoordinator.swift in Sources */,
 				7C44461F2949C2ED0018F4E7 /* AppDelegate.swift in Sources */,
 				7C24B73F296C454500A795E1 /* ForecastService.swift in Sources */,
 				7C3D6D0429801D4C00BB29C2 /* SunAndMoonView.swift in Sources */,
 				7C3D6D02297FFBDF00BB29C2 /* TimeOfDayIndicatorView.swift in Sources */,
+				7C4F758B299F6D0800406056 /* DayForecastCollectionViewDataSource.swift in Sources */,
+				7C4F7584299E5F4300406056 /* HourCollectionViewCell.swift in Sources */,
 				7C3D6CF6297EA5C000BB29C2 /* DateTimeFormatter.swift in Sources */,
 				7C90E80E295ECD20008CD8F5 /* TestTwoView.swift in Sources */,
 				7C24B73C296C15C000A795E1 /* Constants.swift in Sources */,
 				7C24B733296C0DBE00A795E1 /* GeocodingService.swift in Sources */,
+				7C4F74D82981654B00406056 /* FactView.swift in Sources */,
 				7C1429AE297834CC00E5820E /* OverviewSlideView.swift in Sources */,
 				7C44463E2949CB1F0018F4E7 /* CustomSwitch.swift in Sources */,
 				7C3D6CF8297EB43900BB29C2 /* DateCollectionViewCell.swift in Sources */,

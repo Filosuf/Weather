@@ -20,28 +20,83 @@ final class SunAndMoonView: UIView {
         return label
     }()
 
-    lazy var image: UIImageView = {
+    private let sunImage: UIImageView = {
         let image = UIImageView()
+        image.image = UIImage(named: "moon")
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
 
 
-    private let valueLabel: UILabel = {
+    let daylightHoursLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 18)
+        label.textColor = .black
+        label.font = UIFont(name: "Rubik-Regular", size: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
     }()
 
-    private let dividerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(red: 0.125, green: 0.306, blue: 0.78, alpha: 1)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private let sunriseNameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor(red: 0.604, green: 0.587, blue: 0.587, alpha: 1)
+        label.font = UIFont(name: "Rubik-Regular", size: 14)
+        label.text = "Восход"
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        return label
     }()
+
+    private let sunriseValueLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
+        label.font = UIFont(name: "Rubik-Regular", size: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        return label
+    }()
+
+    private let sunsetNameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor(red: 0.604, green: 0.587, blue: 0.587, alpha: 1)
+        label.font = UIFont(name: "Rubik-Regular", size: 14)
+        label.text = "Заход"
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        return label
+    }()
+
+    private let sunsetValueLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
+        label.font = UIFont(name: "Rubik-Regular", size: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        return label
+    }()
+
+    private let moonImage: UIImageView = {
+            let image = UIImageView()
+            image.image = UIImage(named: "moon")
+            image.translatesAutoresizingMaskIntoConstraints = false
+            return image
+        }()
+
+    private let moonLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
+        label.font = UIFont(name: "Rubik-Regular", size: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        return label
+    }()
+
+//    private let dividerView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = UIColor(red: 0.125, green: 0.306, blue: 0.78, alpha: 1)
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        return view
+//    }()
 
     // MARK: - LifeCycle
     init() {
@@ -55,30 +110,54 @@ final class SunAndMoonView: UIView {
     }
 
     // MARK: - Methods
-    func setIndicator(image: UIImage, name: String, value: String) {
+    func setIndicator() {
+        daylightHoursLabel.text = "14:27"
+        sunriseValueLabel.text = "time"
+        sunsetValueLabel.text = "time"
+        moonLabel.text = "moon phase"
     }
 
     private func layout() {
         let interval: CGFloat = 16
 
-        [image, headerLabel, valueLabel, dividerView].forEach { self.addSubview($0) }
+        [headerLabel,
+         sunImage,
+         daylightHoursLabel,
+         sunriseNameLabel,
+         sunriseValueLabel,
+         sunsetNameLabel,
+         sunsetValueLabel,
+         moonImage,
+         moonLabel
+        ].forEach { self.addSubview($0) }
 
         NSLayoutConstraint.activate([
-            image.centerYAnchor.constraint(equalTo: centerYAnchor),
-            image.leadingAnchor.constraint(equalTo: leadingAnchor, constant: interval),
-            image.heightAnchor.constraint(equalToConstant: 26),
-            image.widthAnchor.constraint(equalToConstant: 24),
+            headerLabel.topAnchor.constraint(equalTo: topAnchor),
+            headerLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
 
-            headerLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            headerLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 4),
+            sunImage.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: interval),
+            sunImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: interval),
 
-            valueLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            valueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -interval),
+            daylightHoursLabel.topAnchor.constraint(equalTo: sunImage.topAnchor),
+            daylightHoursLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -interval),
 
-            dividerView.heightAnchor.constraint(equalToConstant: 1),
-            dividerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            dividerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            dividerView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            sunriseNameLabel.topAnchor.constraint(equalTo: sunImage.bottomAnchor, constant: interval),
+            sunriseNameLabel.leadingAnchor.constraint(equalTo: sunImage.leadingAnchor),
+
+            sunriseValueLabel.topAnchor.constraint(equalTo: sunriseNameLabel.topAnchor),
+            sunriseValueLabel.trailingAnchor.constraint(equalTo: daylightHoursLabel.trailingAnchor),
+
+            sunsetNameLabel.topAnchor.constraint(equalTo: sunriseNameLabel.bottomAnchor, constant: interval),
+            sunsetNameLabel.leadingAnchor.constraint(equalTo: sunImage.leadingAnchor),
+
+            sunsetValueLabel.topAnchor.constraint(equalTo: sunsetNameLabel.topAnchor),
+            sunsetValueLabel.trailingAnchor.constraint(equalTo: daylightHoursLabel.trailingAnchor),
+
+            moonImage.topAnchor.constraint(equalTo: sunsetNameLabel.bottomAnchor, constant: interval),
+            moonImage.leadingAnchor.constraint(equalTo: sunImage.leadingAnchor),
+
+            moonLabel.topAnchor.constraint(equalTo: moonImage.topAnchor),
+            moonLabel.trailingAnchor.constraint(equalTo: daylightHoursLabel.trailingAnchor),
         ])
     }
 }

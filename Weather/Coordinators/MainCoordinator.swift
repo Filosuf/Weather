@@ -23,6 +23,10 @@ final class MainCoordinator {
         navCon.pushViewController(onboardingVC, animated: false)
     }
 
+    func showAddLocation() {
+        let addLocationVC = controllersFactory.makeAddLocationViewController(coordinator: self)
+        navCon.pushViewController(addLocationVC, animated: false)
+    }
 //    func showPhotos() {
 //        let vc = controllersFactory.makePhotoViewController()
 //        navCon.pushViewController(vc, animated: true)

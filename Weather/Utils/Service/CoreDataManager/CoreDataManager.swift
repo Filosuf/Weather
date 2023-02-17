@@ -35,35 +35,39 @@ final class CoreDataManager: CoreDataManagerProtocol {
         persistentContainer.performBackgroundTask { [weak self] contextBackground in
             guard let self = self else { return }
 
-            let newWeather = Weather(context: contextBackground)
+            let newWeather = self.fetchWeather(locationName: locationName, context: contextBackground)
             newWeather.locationName = locationName
             newWeather.uploadTime = Double(weather.now)
 
-            let newFact = self.createIndicators(indicators: weather.fact, context: contextBackground)
+            let newFact = self.createIndicators(entity: newWeather.fact, indicators: weather.fact, context: contextBackground)
             newWeather.fact = newFact
 
-            let timeZone = TimeZoneInfo()
+            let timeZone = newWeather.timeZone ?? TimeZoneInfo(context: contextBackground)
             timeZone.name = weather.info.tzinfo.name
             timeZone.offset = Int64(weather.info.tzinfo.offset)
             newWeather.timeZone = timeZone
             
             for forecast in weather.forecasts {
-                let newForecast = Forecast(context: contextBackground)
+                let oldForecast = self.fetchForecast(locationName: newWeather.locationName, date: forecast.dateTs)
+                print(Date(timeIntervalSince1970: oldForecast?.date ?? 0))
+                print("search date = \(Date(timeIntervalSince1970: Double(forecast.dateTs)))")
+                let newForecast =  oldForecast ?? Forecast(context: contextBackground)
                 newForecast.locationName = locationName
                 newForecast.date = Double(forecast.dateTs)
                 newForecast.moonCode = Int16(forecast.moonCode)
                 newForecast.sunset = forecast.sunset
                 newForecast.sunrise = forecast.sunrise
 
-                let newDayShort = self.createIndicators(indicators: forecast.parts.dayShort, context: contextBackground)
+                let newDayShort = self.createIndicators(entity: newForecast.dayShort, indicators: forecast.parts.dayShort, context: contextBackground)
                 newForecast.dayShort = newDayShort
 
-                let newNightShort = self.createIndicators(indicators: forecast.parts.nightShort, context: contextBackground)
+                let newNightShort = self.createIndicators(entity: newForecast.nightShort, indicators: forecast.parts.nightShort, context: contextBackground)
                 newForecast.nightShort = newNightShort
 
                 for hour in forecast.hours {
                     guard let hour = hour else { continue }
-                    let newHour = self.createIndicators(indicators: hour, context: contextBackground)
+                    let oldHour = self.fetchHourForecast(forecast: newForecast, hour: hour.hourTs)
+                    let newHour = self.createIndicators(entity: oldHour, indicators: hour, context: contextBackground)
                     newForecast.addToHours(newHour)
                 }
 
@@ -77,26 +81,11 @@ final class CoreDataManager: CoreDataManagerProtocol {
         }
     }
 
-//    func getForecasts(locationName: String? = nil) -> [Weather] {
-//        let request = Weather.fetchRequest()
-//        if let name = locationName, name != ""  {
-//            request.predicate = NSPredicate(format: "locationName == %@", name)
-//        }
-//        guard let fetchRequestResult = try? persistentContainer.viewContext.fetch(request) else { return [] }
-//        return fetchRequestResult
-//    }
-
-//    func getForecast(locationName: String) -> Weather? {
-//        let request = Weather.fetchRequest()
-////        request.predicate = NSPredicate(format: "locationName == %@ AND forecasts.sunrise == %@", locationName, "09:07" )
-//        request.predicate = NSPredicate(format: "locationName == %@", locationName)
-//        return (try? persistentContainer.viewContext.fetch(request))?.first
-//    }
-
     func getFact(locationName: String) -> Indicators? {
         let request = Weather.fetchRequest()
         request.predicate = NSPredicate(format: "locationName == %@", locationName)
         let fetchRequestResult = try? persistentContainer.viewContext.fetch(request)
+        print("\(locationName).weather = \(fetchRequestResult?.count ?? -1)")
         return fetchRequestResult?.first?.fact
     }
 
@@ -126,6 +115,14 @@ final class CoreDataManager: CoreDataManagerProtocol {
         }
         return hourForecasts
     }
+
+    func getTimeZone(locationName: String) -> TimeZoneInfo? {
+        let request = Weather.fetchRequest()
+        request.predicate = NSPredicate(format: "locationName == %@", locationName)
+        let fetchRequestResult = try? persistentContainer.viewContext.fetch(request)
+        return fetchRequestResult?.first?.timeZone
+    }
+
 //    func deleteObject(_ post: Post) {
 //        let context = persistentContainer.viewContext
 //
@@ -141,20 +138,47 @@ final class CoreDataManager: CoreDataManagerProtocol {
 //        saveContext()
 //    }
 
-    func saveContext () {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-        }
+//    func saveContext () {
+//        let context = persistentContainer.viewContext
+//        if context.hasChanges {
+//            do {
+//                try context.save()
+//            } catch {
+//                let nserror = error as NSError
+//                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+//            }
+//        }
+//    }
+    private func fetchForecast(locationName: String?, date: Int) -> Forecast? {
+        guard let locationName = locationName else { return nil }
+
+        let request = Forecast.fetchRequest()
+        request.predicate = NSPredicate(format: "locationName == %@ AND date == %@", locationName, Double(date) as NSNumber)
+        let fetchRequestResult = try? persistentContainer.viewContext.fetch(request)
+        return fetchRequestResult?.first
     }
 
-    private func createIndicators(indicators: IndicatorsCodable, context: NSManagedObjectContext) -> Indicators {
-        let newIndicators = Indicators(context: context)
+    func fetchHourForecast(forecast: Forecast, hour: Double?) -> Indicators? {
+        guard let hour = hour else { return nil }
+
+        for hourForecast in forecast.hoursSorted {
+            if hourForecast.hourTs ==  hour {
+                return hourForecast
+            }
+        }
+        return nil
+    }
+
+
+    private func fetchWeather(locationName: String, context: NSManagedObjectContext) -> Weather {
+        let request = Weather.fetchRequest()
+        request.predicate = NSPredicate(format: "locationName == %@", locationName)
+        let fetchRequestResult = try? persistentContainer.viewContext.fetch(request)
+        return fetchRequestResult?.first ?? Weather(context: context)
+    }
+
+    private func createIndicators(entity: Indicators?, indicators: IndicatorsCodable, context: NSManagedObjectContext) -> Indicators {
+        let newIndicators = entity ?? Indicators(context: context)
         newIndicators.temp = indicators.temp
         newIndicators.condition = indicators.condition
         newIndicators.feelsLike = indicators.feelsLike
