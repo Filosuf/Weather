@@ -25,13 +25,19 @@ final class MainCoordinator {
 
     func showAddLocation() {
         let addLocationVC = controllersFactory.makeAddLocationViewController(coordinator: self)
-        navCon.pushViewController(addLocationVC, animated: false)
+        navCon.pushViewController(addLocationVC, animated: true)
     }
-//    func showPhotos() {
-//        let vc = controllersFactory.makePhotoViewController()
-//        navCon.pushViewController(vc, animated: true)
-//    }
-//
+
+    func showSettings() {
+        let settingsVC = controllersFactory.makeSettingsViewController(coordinator: self)
+        navCon.pushViewController(settingsVC, animated: true)
+    }
+
+    func showTimeOfDayForecast(index forecastSelected: Int, in forecasts: [Forecast], timeZone: TimeZoneInfo?) {
+        let timeOfDayVC = controllersFactory.makeTimeOfDayForecastViewController(index: forecastSelected, in: forecasts, timeZone: timeZone)
+        navCon.pushViewController(timeOfDayVC, animated: true)
+    }
+
 //    func showAlert(title: String, message: String, buttonText: String = "Ok") {
 //        // создаём объекты всплывающего окна
 //        let alert = UIAlertController(

@@ -9,21 +9,36 @@ import UIKit
 
 final class HourCollectionViewDataSource: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
-//    let forecast: [Indicators]
-//
-//    init(forecast: [Indicators]) {
-//        self.forecast = forecast
-//    }
+    private var forecasts = [Indicators]()
+    private var timeZone: TimeZoneInfo?
+    private let dateFormatter = DateTimeFormatter.shared
+
+    init(forecasts: [Indicators], timeZone: TimeZoneInfo?) {
+        self.forecasts = forecasts
+        self.timeZone = timeZone
+    }
+
+    func updateForecast(forecasts: [Indicators], timeZone: TimeZoneInfo?) {
+        self.forecasts = forecasts
+        self.timeZone = timeZone
+    }
 
     // MARK: - UICollectionViewDataSource
-
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        24
+        forecasts.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HourCollectionViewCell.identifier, for: indexPath) as! HourCollectionViewCell
-        cell.setupCell(time: "12:00")
+
+        let forecast = forecasts[indexPath.row]
+        let temp = Int(forecast.temp.rounded())
+        let date = Date(timeIntervalSince1970: forecast.hourTs)
+        let time = dateFormatter.dateToString(date: date, format: .time, timeZone: timeZone)
+        let condition = Conditions.fetchCondition(with: forecast.condition ?? "")
+        let conditionImageName = Conditions.fetchIconName(with: condition)
+        let conditionImage = UIImage(named: conditionImageName)
+        cell.setupCell(time: time, temp: temp, conditionImage: conditionImage)
         return cell
     }
 

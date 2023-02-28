@@ -16,6 +16,8 @@ class MainViewController: UIViewController {
 
     private var slides: [OverviewSlideView] = []
     private var locations: [Location] = []
+    private var hourCollections = [HourCollectionViewDataSource]()
+    private var dayCollections = [DayForecastCollectionViewDataSource]()
 
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -60,9 +62,9 @@ class MainViewController: UIViewController {
             setupSlides()
         }
         loadWeather()
+        updateView()
+//        getFactDebug()
 
-        getFactDebug()
-        
         layout()
 //        navigationController?.pushViewController(TimeOfDayForecastsViewController(), animated: true)
     }
@@ -93,6 +95,13 @@ class MainViewController: UIViewController {
         loadForecast(index: index)
     }
 
+    private func updateView() {
+
+        for hourCollection in hourCollections {
+//            hourCollection.updateForecast(forecasts: <#T##[Indicators]#>, timeZone: <#T##TimeZoneInfo?#>)
+        }
+    }
+
     private func getFactDebug() {
         for location in locations {
             let fact = coreDataManager.getFact(locationName: location.name)
@@ -106,6 +115,7 @@ class MainViewController: UIViewController {
             }
         }
     }
+
     private func setupSlides() {
         setupSlideScrollView(slides: slides)
 
@@ -117,20 +127,34 @@ class MainViewController: UIViewController {
 
     private func setupNavigationBar() {
         title = "NavVC"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "info.circle"), style: .plain, target: self, action: #selector(dismissSelf))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "location"), style: .plain, target: self, action: #selector(addLocation))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "list"), style: .plain, target: self, action: #selector(showSettings))
+        navigationItem.rightBarButtonItem?.tintColor = .black
+        navigationItem.leftBarButtonItem?.tintColor = .black
     }
 
-    @objc private func dismissSelf() {
+    @objc private func addLocation() {
         coordinator.showAddLocation()
     }
 
-    private let hourCollectionViewDataSource = HourCollectionViewDataSource()
-    private let dayCollectionViewDataSource = DayForecastCollectionViewDataSource()
+    @objc private func showSettings() {
+        coordinator.showSettings()
+    }
 
     func createSlides(locations: [Location]) -> [OverviewSlideView] {
         var slidesArray = [OverviewSlideView]()
         for location in locations {
             let slide = OverviewSlideView(locationName: location.name)
+            let hourForecast = coreDataManager.getHourForecasts(locationName: location.name)
+            print(hourForecast.count)
+            print(Date(timeIntervalSince1970: hourForecast.first?.hourTs ?? 0.0))
+            let timeZone = coreDataManager.getTimeZone(locationName: location.name)
+            let hourCollectionViewDataSource = HourCollectionViewDataSource(forecasts: hourForecast, timeZone: timeZone)
+            hourCollections.append(hourCollectionViewDataSource)
+
+            let dayForecast = coreDataManager.getForecasts(locationName: location.name)
+            let dayCollectionViewDataSource = DayForecastCollectionViewDataSource(forecasts: dayForecast, timeZone: timeZone, coordinator: coordinator)
+            dayCollections.append(dayCollectionViewDataSource)
             slide.setupCollectionViews(hourDataSource: hourCollectionViewDataSource, hourDelegate: hourCollectionViewDataSource, dayDataSource: dayCollectionViewDataSource, dayDataDelegate: dayCollectionViewDataSource)
             slidesArray.append(slide)
         }
@@ -162,7 +186,7 @@ class MainViewController: UIViewController {
             scrollView.topAnchor.constraint(equalTo: pageControl.bottomAnchor, constant: 10),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
@@ -216,6 +240,7 @@ extension MainViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let pageIndex = round(scrollView.contentOffset.x/view.frame.width)
         pageControl.currentPage = Int(pageIndex)
+        title = locations[Int(pageIndex)].name
     }
 
     func scrollView(_ scrollView: UIScrollView, didScrollToPercentageOffset percentageHorizontalOffset: CGFloat) {

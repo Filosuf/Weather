@@ -109,6 +109,8 @@ final class CoreDataManager: CoreDataManagerProtocol {
                     return hourForecasts
                 }
                 else if hourForecast.hourTs > date {
+                    print(Date(timeIntervalSince1970: date))
+                    print(Date(timeIntervalSince1970: hourForecast.hourTs))
                     hourForecasts.append(hourForecast)
                 }
             }

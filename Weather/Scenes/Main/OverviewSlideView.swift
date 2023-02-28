@@ -77,7 +77,7 @@ final class OverviewSlideView: UIView {
 
     //MARK: - Metods
     @objc private func hourForecastDetailButtonTap() {
-        
+        print("detail day button")
     }
 //    func taps() {
 //        showStatusButton.tapAction =  { [weak self] in

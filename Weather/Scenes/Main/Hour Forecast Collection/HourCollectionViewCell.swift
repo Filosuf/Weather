@@ -39,12 +39,16 @@ final class HourCollectionViewCell: UICollectionViewCell {
                 UIView.animate(withDuration: 0.3) {
                     self.backgroundColor = .Main.blueSecond
                     self.layer.borderColor = UIColor.Main.blueSecond.cgColor
+                    self.timeLabel.textColor = .white
+                    self.tempLabel.textColor = .white
                 }
             }
             else {
                 UIView.animate(withDuration: 0.3) {
                     self.backgroundColor = .white
                     self.layer.borderColor = UIColor.Main.borderHourCell.cgColor
+                    self.timeLabel.textColor = .black
+                    self.tempLabel.textColor = .black
                 }
             }
         }
@@ -62,10 +66,10 @@ final class HourCollectionViewCell: UICollectionViewCell {
     }
 
     // MARK: - Methods
-    func setupCell(time: String) {
+    func setupCell(time: String, temp: Int, conditionImage: UIImage?) {
         timeLabel.text = time
-        conditionImage.image = UIImage(named: "moon")
-        tempLabel.text = "11º"
+        self.conditionImage.image = conditionImage
+        tempLabel.text = "\(temp)º"
     }
 
     private func settingCell() {

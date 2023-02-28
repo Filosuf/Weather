@@ -71,12 +71,18 @@ final class DayForecastCollectionViewCell: UICollectionViewCell {
         layer.cornerRadius = 5
     }
 
-    func setupCell(date: String) {
+    func setupCell(date: String,
+                   conditionImage: UIImage?,
+                   probabilityOfPrecipitation: String,
+                   condition: String,
+                   tempMax: String,
+                   tempMin: String
+    ) {
         dateLabel.text = date
-        conditionImage.image = UIImage(named: "moon")
-        probabilityOfPrecipitationLabel.text = "57%"
-        conditionLabel.text = "Cloud"
-        tempLabel.text = "4º - 11º"
+        self.conditionImage.image = conditionImage
+        probabilityOfPrecipitationLabel.text = "\(probabilityOfPrecipitation)%"
+        conditionLabel.text = condition
+        tempLabel.text = "\(tempMin)º  \(tempMax)º"
     }
 
     private func layout() {
@@ -93,9 +99,12 @@ final class DayForecastCollectionViewCell: UICollectionViewCell {
             dateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
             dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: interval),
             dateLabel.heightAnchor.constraint(equalToConstant: 20),
+            dateLabel.widthAnchor.constraint(equalToConstant: 53),
 
             conditionImage.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 6),
             conditionImage.leadingAnchor.constraint(equalTo: dateLabel.leadingAnchor),
+            conditionImage.heightAnchor.constraint(equalToConstant: 20),
+            conditionImage.widthAnchor.constraint(equalToConstant: 20),
 
             probabilityOfPrecipitationLabel.trailingAnchor.constraint(equalTo: dateLabel.trailingAnchor),
             probabilityOfPrecipitationLabel.centerYAnchor.constraint(equalTo: conditionImage.centerYAnchor),

@@ -20,7 +20,7 @@ final class TimeOfDayIndicatorView: UIView {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 14)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -29,7 +29,7 @@ final class TimeOfDayIndicatorView: UIView {
     private let valueLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 18)
+        label.font = UIFont.systemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label

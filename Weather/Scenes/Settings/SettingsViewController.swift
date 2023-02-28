@@ -10,6 +10,7 @@ import UIKit
 class SettingsViewController: UIViewController {
 
     private var storageService: StorageProtocol
+    private let coordinator: MainCoordinator
 
     private let settingLabel: UILabel = {
         let label = UILabel()
@@ -146,8 +147,9 @@ class SettingsViewController: UIViewController {
     }()
 
     // MARK: - LifeCycle
-    init(storageService: StorageProtocol) {
+    init(storageService: StorageProtocol, coordinator: MainCoordinator) {
         self.storageService = storageService
+        self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -158,6 +160,7 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .Custom.blue
+        navigationItem.hidesBackButton = true
         layout()
     }
 
@@ -173,8 +176,9 @@ class SettingsViewController: UIViewController {
         settings.windSpeedIsKm = windSpeedSwitch.isOn
         settings.timeFormatIs24 = timeFormatSwitch.isOn
         settings.notificationsIsOn = notificationsSwitch.isOn
-
         storageService.settings = settings
+        
+        coordinator.pop()
     }
 
     private func setupView() {

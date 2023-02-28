@@ -13,7 +13,7 @@ final class TimeOfDayForecastView: UIView {
     private let timeOfDayLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Medium", size: 18)
+        label.font = UIFont.systemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -28,7 +28,7 @@ final class TimeOfDayForecastView: UIView {
     private let tempLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Medium", size: 18)
+        label.font = UIFont.systemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -36,7 +36,7 @@ final class TimeOfDayForecastView: UIView {
     private let conditionLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.604, green: 0.587, blue: 0.587, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 14)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -59,7 +59,6 @@ final class TimeOfDayForecastView: UIView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
-//        stackView.distribution = .fillEqually
         stackView.spacing = 10
         stackView.backgroundColor = .lightGray
         stackView.alignment = .center
@@ -77,15 +76,25 @@ final class TimeOfDayForecastView: UIView {
     }
 
     // MARK: - Methods
-    func setupView() {
-        timeOfDayLabel.text = "Date"
-        conditionImage.image = UIImage(named: "moon")!
-        tempLabel.text = "26º"
-        conditionLabel.text = "Rain"
-        feelsLikeView.setIndicator(image: UIImage(named: "moon")!, name: "По ощущениям", value: "Valueº")
-        uvIndex.setIndicator(image: UIImage(named: "moon")!, name: "УФ индекс", value: "value UV")
-        windView.setIndicator(image: UIImage(named: "moon")!, name: "Ветер", value: "value")
-        probabilityOfPrecipitationView.setIndicator(image: UIImage(named: "moon")!, name: "Атмосферные осадки", value: "value")
+    func setupView(title: String, forecast: Indicators) {
+        timeOfDayLabel.text = title
+        let condition = Conditions.fetchCondition(with: forecast.condition ?? "")
+        let conditionImageName = Conditions.fetchIconName(with: condition)
+        let conditionTitle = Conditions.fetchTitle(with: condition)
+        conditionImage.image = UIImage(named: conditionImageName)
+        tempLabel.text = "\(Int(forecast.temp.rounded()))º"
+        conditionLabel.text = conditionTitle
+        let feelsLikeTemp = "\(forecast.feelsLike)º"
+        let uvIndex = "\(forecast.uvIndex) UV"
+        let windDirection = Directions.fetchDirection(with: forecast.description)
+        let windDirectionLabel = Directions.fetchTitle(with: windDirection)
+        let windSpeed = forecast.windSpeed
+        let windTitle = "\(windSpeed)m/s \(windDirectionLabel)"
+        let probabilityOfPrecipitation = "\(forecast.precProb)%"
+        feelsLikeView.setIndicator(image: UIImage(named: "feelTemp")!, name: "По ощущениям", value: feelsLikeTemp)
+        self.uvIndex.setIndicator(image: UIImage(named: "sun")!, name: "УФ индекс", value: uvIndex)
+        windView.setIndicator(image: UIImage(named: "wind")!, name: "Ветер", value: windTitle)
+        probabilityOfPrecipitationView.setIndicator(image: UIImage(named: "rainSecond")!, name: "Атмосферные осадки", value: probabilityOfPrecipitation)
     }
 
     private func layout() {

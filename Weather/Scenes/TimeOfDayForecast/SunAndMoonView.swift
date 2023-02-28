@@ -13,7 +13,7 @@ final class SunAndMoonView: UIView {
     private let headerLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 18)
+        label.font = UIFont.systemFont(ofSize: 18)
         label.text = "Солнце и Луна"
         label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -22,7 +22,7 @@ final class SunAndMoonView: UIView {
 
     private let sunImage: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(named: "moon")
+        image.image = UIImage(named: "sun")
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
@@ -31,7 +31,7 @@ final class SunAndMoonView: UIView {
     let daylightHoursLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = UIFont(name: "Rubik-Regular", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -40,7 +40,7 @@ final class SunAndMoonView: UIView {
     private let sunriseNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.604, green: 0.587, blue: 0.587, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 14)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.text = "Восход"
         label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -50,7 +50,7 @@ final class SunAndMoonView: UIView {
     private let sunriseValueLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -59,7 +59,7 @@ final class SunAndMoonView: UIView {
     private let sunsetNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.604, green: 0.587, blue: 0.587, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 14)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.text = "Заход"
         label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -69,7 +69,7 @@ final class SunAndMoonView: UIView {
     private let sunsetValueLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -85,7 +85,7 @@ final class SunAndMoonView: UIView {
     private let moonLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 16)
+        label.font = UIFont.systemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -110,11 +110,11 @@ final class SunAndMoonView: UIView {
     }
 
     // MARK: - Methods
-    func setIndicator() {
-        daylightHoursLabel.text = "14:27"
-        sunriseValueLabel.text = "time"
-        sunsetValueLabel.text = "time"
-        moonLabel.text = "moon phase"
+    func setIndicator(daylight: String, sunrise: String, sunset: String, moonPhase: String) {
+        daylightHoursLabel.text = daylight
+        sunriseValueLabel.text = sunrise
+        sunsetValueLabel.text = sunset
+        moonLabel.text = moonPhase
     }
 
     private func layout() {

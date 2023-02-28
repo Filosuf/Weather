@@ -30,13 +30,18 @@ final class ViewControllersFactory {
         return viewController
     }
 
-    func makeSettingsViewController() -> SettingsViewController {
-        let viewController = SettingsViewController(storageService: storageService)
+    func makeSettingsViewController(coordinator: MainCoordinator) -> SettingsViewController {
+        let viewController = SettingsViewController(storageService: storageService, coordinator: coordinator)
         return viewController
     }
 
     func makeAddLocationViewController(coordinator: MainCoordinator) -> AddLocationViewController {
         let viewController = AddLocationViewController(coordinator: coordinator)
+        return viewController
+    }
+
+    func makeTimeOfDayForecastViewController(index forecastSelected: Int, in forecasts: [Forecast], timeZone: TimeZoneInfo?) -> TimeOfDayForecastsViewController {
+        let viewController = TimeOfDayForecastsViewController(index: forecastSelected, in: forecasts, timeZone: timeZone)
         return viewController
     }
 

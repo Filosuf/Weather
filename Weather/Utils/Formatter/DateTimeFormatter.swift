@@ -22,7 +22,7 @@ final class DateTimeFormatter {
     // MARK: - Private Init
     private init() {}
     
-    func dateToString(date: Date, format: DateFormat, timeZone: TimeZoneInfo) -> String {
+    func dateToString(date: Date, format: DateFormat, timeZone: TimeZoneInfo?) -> String {
         switch format {
         case .fullDate:
             dateFormatter.dateFormat = "E dd/MM"
@@ -31,13 +31,13 @@ final class DateTimeFormatter {
         case .time:
             dateFormatter.dateFormat = "HH:mm"
         }
-        if let timeZoneName = timeZone.name, let timeZone = TimeZone(identifier: timeZoneName) {
-                    dateFormatter.timeZone = timeZone
-        } else if let timeZone = TimeZone(secondsFromGMT: Int(timeZone.offset)) {
-                    dateFormatter.timeZone = timeZone
-                } else {
-                    dateFormatter.timeZone = .current
-                }
+        if let timeZoneName = timeZone?.name, let timeZone = TimeZone(identifier: timeZoneName) {
+            dateFormatter.timeZone = timeZone
+        } else if let offset = timeZone?.offset, let timeZone = TimeZone(secondsFromGMT: Int(offset)) {
+            dateFormatter.timeZone = timeZone
+        } else {
+            dateFormatter.timeZone = .current
+        }
         return dateFormatter.string(from: date)
     }
 }

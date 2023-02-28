@@ -47,6 +47,8 @@
 		7C4F758B299F6D0800406056 /* DayForecastCollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4F758A299F6D0800406056 /* DayForecastCollectionViewDataSource.swift */; };
 		7C90E80E295ECD20008CD8F5 /* TestTwoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C90E80D295ECD20008CD8F5 /* TestTwoView.swift */; };
 		7C90E81129659E6E008CD8F5 /* SettingsStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C90E81029659E6E008CD8F5 /* SettingsStorageService.swift */; };
+		7CB5BE3329AB5A0D0047C41F /* Conditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB5BE3229AB5A0D0047C41F /* Conditions.swift */; };
+		7CB5BE3529AE20AF0047C41F /* Directions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB5BE3429AE20AF0047C41F /* Directions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +94,8 @@
 		7C4F758A299F6D0800406056 /* DayForecastCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayForecastCollectionViewDataSource.swift; sourceTree = "<group>"; };
 		7C90E80D295ECD20008CD8F5 /* TestTwoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TestTwoView.swift; path = Weather/TestTwoView.swift; sourceTree = SOURCE_ROOT; };
 		7C90E81029659E6E008CD8F5 /* SettingsStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStorageService.swift; sourceTree = "<group>"; };
+		7CB5BE3229AB5A0D0047C41F /* Conditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conditions.swift; sourceTree = "<group>"; };
+		7CB5BE3429AE20AF0047C41F /* Directions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +229,7 @@
 		7C44461D2949C2ED0018F4E7 /* Weather */ = {
 			isa = PBXGroup;
 			children = (
+				7CB5BE3129AB59B90047C41F /* Models */,
 				7C1429A72975692A00E5820E /* Coordinators */,
 				7C44463B2949CA870018F4E7 /* Utils */,
 				7C4446372949C9300018F4E7 /* Scenes */,
@@ -345,6 +350,15 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
+		7CB5BE3129AB59B90047C41F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7CB5BE3229AB5A0D0047C41F /* Conditions.swift */,
+				7CB5BE3429AE20AF0047C41F /* Directions.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -432,6 +446,7 @@
 				7C24B73F296C454500A795E1 /* ForecastService.swift in Sources */,
 				7C3D6D0429801D4C00BB29C2 /* SunAndMoonView.swift in Sources */,
 				7C3D6D02297FFBDF00BB29C2 /* TimeOfDayIndicatorView.swift in Sources */,
+				7CB5BE3329AB5A0D0047C41F /* Conditions.swift in Sources */,
 				7C4F758B299F6D0800406056 /* DayForecastCollectionViewDataSource.swift in Sources */,
 				7C4F7584299E5F4300406056 /* HourCollectionViewCell.swift in Sources */,
 				7C3D6CF6297EA5C000BB29C2 /* DateTimeFormatter.swift in Sources */,
@@ -445,6 +460,7 @@
 				7C4446212949C2ED0018F4E7 /* SceneDelegate.swift in Sources */,
 				7C1429AC297570C400E5820E /* ViewControllersFactory.swift in Sources */,
 				7C1429A02970054900E5820E /* HourlyForecastViewController.swift in Sources */,
+				7CB5BE3529AE20AF0047C41F /* Directions.swift in Sources */,
 				7C44463A2949C99C0018F4E7 /* SettingsViewController.swift in Sources */,
 				7C24B735296C12AA00A795E1 /* URLSession+Extension.swift in Sources */,
 				7C24B73A296C142900A795E1 /* CoordinatesResult.swift in Sources */,
