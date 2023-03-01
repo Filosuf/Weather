@@ -13,7 +13,7 @@ class DateCollectionViewCell: UICollectionViewCell {
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 18)
+        label.font = UIFont.systemFont(ofSize: 22)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -29,7 +29,7 @@ class DateCollectionViewCell: UICollectionViewCell {
             }
             else {
                 UIView.animate(withDuration: 0.3) {
-                    self.backgroundColor = .darkGray
+                    self.backgroundColor = .white
                     self.dateLabel.textColor = .black
                 }
             }
@@ -38,7 +38,7 @@ class DateCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .blue
+        layer.cornerRadius = 5
         layout()
     }
 

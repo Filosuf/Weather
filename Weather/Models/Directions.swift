@@ -18,7 +18,8 @@ enum Directions: String, CaseIterable {
     case c
     case unowned
 
-    static func fetchDirection(with name: String) -> Directions {
+    static func fetchDirection(with name: String?) -> Directions {
+        guard let name = name else { return Directions.unowned }
         let direction = Directions.allCases.first { $0.rawValue == name }
         return direction ?? Directions.unowned
     }

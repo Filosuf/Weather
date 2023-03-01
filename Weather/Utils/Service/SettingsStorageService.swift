@@ -89,4 +89,5 @@ final class SettingsStorageService: StorageProtocol {
             storage.set(encoded, forKey: settingsKey)
         }
     }
+    
 }

@@ -19,19 +19,23 @@ class MainViewController: UIViewController {
     private var hourCollections = [HourCollectionViewDataSource]()
     private var dayCollections = [DayForecastCollectionViewDataSource]()
 
+    // Для постраничного скрола только в горизонтальном направлении
+    private var lastOffsetY: CGFloat = 0
+    private var lastOffsetX: CGFloat = 0
+
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.delegate = self
+        scrollView.showsHorizontalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.isDirectionalLockEnabled = true
         return scrollView
     }()
 
     private lazy var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
-        pageControl.backgroundColor = .systemMint
         pageControl.tintColor = .black
         pageControl.pageIndicatorTintColor = .black
-        pageControl.currentPageIndicatorTintColor = .white
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl
     }()
@@ -63,10 +67,17 @@ class MainViewController: UIViewController {
         }
         loadWeather()
         updateView()
-//        getFactDebug()
-
         layout()
-//        navigationController?.pushViewController(TimeOfDayForecastsViewController(), animated: true)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let locations = storageService.getLocations() {
+            self.locations = locations
+            slides = createSlides(locations: locations)
+            setupSlides()
+        }
+        loadWeather()
     }
 
     // MARK: - Methods
@@ -84,9 +95,7 @@ class MainViewController: UIViewController {
             case .failure(_):
                 return
             }
-//            if index < self.locations.count - 1 {
-                self.loadForecast(index: index + 1)
-//            }
+            self.loadForecast(index: index + 1)
         }
     }
 
@@ -97,9 +106,6 @@ class MainViewController: UIViewController {
 
     private func updateView() {
 
-        for hourCollection in hourCollections {
-//            hourCollection.updateForecast(forecasts: <#T##[Indicators]#>, timeZone: <#T##TimeZoneInfo?#>)
-        }
     }
 
     private func getFactDebug() {
@@ -121,8 +127,6 @@ class MainViewController: UIViewController {
 
         pageControl.numberOfPages = slides.count
         pageControl.currentPage = 0
-        pageControl.setIndicatorImage(UIImage(systemName: "heart.fill"), forPage: 0)
-//        view.bringSubviewToFront(pageControl)
     }
 
     private func setupNavigationBar() {
@@ -131,6 +135,8 @@ class MainViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "list"), style: .plain, target: self, action: #selector(showSettings))
         navigationItem.rightBarButtonItem?.tintColor = .black
         navigationItem.leftBarButtonItem?.tintColor = .black
+        navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
+        navigationItem.backBarButtonItem?.tintColor = .black
     }
 
     @objc private func addLocation() {
@@ -146,9 +152,11 @@ class MainViewController: UIViewController {
         for location in locations {
             let slide = OverviewSlideView(locationName: location.name)
             let hourForecast = coreDataManager.getHourForecasts(locationName: location.name)
-            print(hourForecast.count)
-            print(Date(timeIntervalSince1970: hourForecast.first?.hourTs ?? 0.0))
             let timeZone = coreDataManager.getTimeZone(locationName: location.name)
+            slide.hourDetailAction = { [weak self] in
+                self?.coordinator.showHourlyForecast(forecasts: hourForecast, timeZone: timeZone)
+            }
+
             let hourCollectionViewDataSource = HourCollectionViewDataSource(forecasts: hourForecast, timeZone: timeZone)
             hourCollections.append(hourCollectionViewDataSource)
 
@@ -161,14 +169,12 @@ class MainViewController: UIViewController {
         return slidesArray
     }
 
-
     func setupSlideScrollView(slides : [OverviewSlideView]) {
-//        scrollView.frame.size = CGSize(width: view.frame.width, height: view.frame.height)
-        scrollView.contentSize = CGSize(width: view.frame.width * CGFloat(slides.count), height: view.frame.height)
-        scrollView.isPagingEnabled = true
+        scrollView.contentSize = CGSize(width: view.frame.width * CGFloat(slides.count), height: 910)
+//        scrollView.isPagingEnabled = true
 
         for i in 0 ..< slides.count {
-            slides[i].frame = CGRect(x: view.frame.width * CGFloat(i), y: 0, width: view.frame.width, height: view.frame.height)
+            slides[i].frame = CGRect(x: view.frame.width * CGFloat(i), y: 0, width: view.frame.width, height: 910)
             scrollView.addSubview(slides[i])
         }
     }
@@ -240,7 +246,23 @@ extension MainViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let pageIndex = round(scrollView.contentOffset.x/view.frame.width)
         pageControl.currentPage = Int(pageIndex)
-        title = locations[Int(pageIndex)].name
+        pageControl.currentPageIndicatorTintColor = .blue
+        if !locations.isEmpty {
+            title = locations[Int(pageIndex)].name
+        }
+        if scrollView.contentOffset.y != lastOffsetY {
+                lastOffsetY = scrollView.contentOffset.y
+                scrollView.isPagingEnabled = false
+            } else {
+                scrollView.isPagingEnabled = true
+            }
+            if scrollView.contentOffset.x != lastOffsetX {
+                lastOffsetX = scrollView.contentOffset.x
+                scrollView.isPagingEnabled = true
+            } else {
+                scrollView.isPagingEnabled = false
+            }
+
     }
 
     func scrollView(_ scrollView: UIScrollView, didScrollToPercentageOffset percentageHorizontalOffset: CGFloat) {

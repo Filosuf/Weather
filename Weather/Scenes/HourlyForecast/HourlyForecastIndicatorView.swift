@@ -19,8 +19,8 @@ final class HourlyForecastIndicatorView: UIView {
 
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 14)
+        label.textColor = .Text.text
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -28,8 +28,8 @@ final class HourlyForecastIndicatorView: UIView {
 
     private let valueLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.604, green: 0.587, blue: 0.587, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 14)
+        label.textColor = .Text.textSecond
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -47,7 +47,7 @@ final class HourlyForecastIndicatorView: UIView {
     }
 
     // MARK: - Methods
-    func setIndicator(image: UIImage, name: String, value: String) {
+    func setIndicator(image: UIImage?, name: String, value: String) {
         self.image.image = image
         nameLabel.text = name
         valueLabel.text = value
@@ -60,8 +60,8 @@ final class HourlyForecastIndicatorView: UIView {
         NSLayoutConstraint.activate([
             image.centerYAnchor.constraint(equalTo: centerYAnchor),
             image.leadingAnchor.constraint(equalTo: leadingAnchor),
-            image.heightAnchor.constraint(equalToConstant: 12),
-            image.widthAnchor.constraint(equalToConstant: 12),
+            image.heightAnchor.constraint(equalToConstant: 18),
+            image.widthAnchor.constraint(equalToConstant: 18),
 
             nameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 4),

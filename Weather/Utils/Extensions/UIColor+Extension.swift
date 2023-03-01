@@ -16,7 +16,7 @@ extension UIColor {
     enum Main {
         static var borderHourCell: UIColor { UIColor(named: "borderHourCell")! }
         static var blueSecond: UIColor { UIColor(named: "blueSecond")! }
-        static var backgroundDayCell: UIColor { UIColor(named: "backgroundDayCell")! }
+        static var backgroundCell: UIColor { UIColor(named: "backgroundDayCell")! }
     }
 
     enum Text {

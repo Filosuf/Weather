@@ -22,7 +22,7 @@ final class TimeOfDayForecastsViewController: UIViewController {
     private let locationNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .Text.text
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 22)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -32,7 +32,6 @@ final class TimeOfDayForecastsViewController: UIViewController {
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .systemGray6
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.register(DateCollectionViewCell.self, forCellWithReuseIdentifier: DateCollectionViewCell.identifier)
         collectionView.dataSource = self
@@ -66,7 +65,6 @@ final class TimeOfDayForecastsViewController: UIViewController {
 
     private let contentView: UIView = {
         let contentView = UIView()
-        contentView.backgroundColor = .cyan
         contentView.translatesAutoresizingMaskIntoConstraints = false
         return contentView
     }()
@@ -85,7 +83,8 @@ final class TimeOfDayForecastsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .white
+        title = "Дневная погода"
         setupView()
         layout()
         let indexPath = IndexPath(row: selectedForecastIndex, section: 0)
@@ -96,10 +95,12 @@ final class TimeOfDayForecastsViewController: UIViewController {
     private func setupView() {
         locationNameLabel.text = currentForecast.locationName
         if let dayShort = currentForecast.dayShort {
-            dayForecast.setupView(title: "Day", forecast: dayShort)
+            print("Day = \(dayShort.temp)")
+            dayForecast.setupView(title: "День", forecast: dayShort)
         }
         if let nightShort = currentForecast.nightShort {
-            nightForecast.setupView(title: "Night", forecast: nightShort)
+            print("Night = \(nightShort.temp)")
+            nightForecast.setupView(title: "Ночь", forecast: nightShort)
         }
         let sunrise = currentForecast.sunrise ?? "-"
         let sunset = currentForecast.sunset ?? "-"
@@ -128,7 +129,7 @@ final class TimeOfDayForecastsViewController: UIViewController {
             dateCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             dateCollectionView.heightAnchor.constraint(equalToConstant: 36),
 
-            dayForecast.topAnchor.constraint(equalTo: dateCollectionView.bottomAnchor, constant: 16),
+            dayForecast.topAnchor.constraint(equalTo: dateCollectionView.bottomAnchor, constant: 40),
             dayForecast.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             dayForecast.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             dayForecast.heightAnchor.constraint(equalToConstant: 341),

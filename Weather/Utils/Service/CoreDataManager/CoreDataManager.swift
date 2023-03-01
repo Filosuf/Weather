@@ -49,8 +49,8 @@ final class CoreDataManager: CoreDataManagerProtocol {
             
             for forecast in weather.forecasts {
                 let oldForecast = self.fetchForecast(locationName: newWeather.locationName, date: forecast.dateTs)
-                print(Date(timeIntervalSince1970: oldForecast?.date ?? 0))
-                print("search date = \(Date(timeIntervalSince1970: Double(forecast.dateTs)))")
+//                print(Date(timeIntervalSince1970: oldForecast?.date ?? 0))
+//                print("search date = \(Date(timeIntervalSince1970: Double(forecast.dateTs)))")
                 let newForecast =  oldForecast ?? Forecast(context: contextBackground)
                 newForecast.locationName = locationName
                 newForecast.date = Double(forecast.dateTs)

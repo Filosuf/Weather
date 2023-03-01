@@ -67,7 +67,7 @@ final class DayForecastCollectionViewCell: UICollectionViewCell {
     }
 
     private func settingCell() {
-        backgroundColor = .Main.backgroundDayCell
+        backgroundColor = .Main.backgroundCell
         layer.cornerRadius = 5
     }
 

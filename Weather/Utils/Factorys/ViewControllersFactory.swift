@@ -45,6 +45,11 @@ final class ViewControllersFactory {
         return viewController
     }
 
+    func makeHourlyForecastViewController(forecasts: [Indicators], timeZone: TimeZoneInfo?) -> HourlyForecastViewController {
+        let viewController = HourlyForecastViewController(forecasts: forecasts, timeZone: timeZone)
+        return viewController
+    }
+
 //    func makeHourlyForecastViewController(coordinator: MainCoordinator) -> HourlyForecastViewController {
 //        let viewController = HourlyForecastViewController(coordinator: coordinator)
 //        return viewController

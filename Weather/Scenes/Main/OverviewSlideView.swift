@@ -10,6 +10,9 @@ import UIKit
 final class OverviewSlideView: UIView {
 
     //MARK: - Properties
+//    private let locationName: String
+    var hourDetailAction: (() -> Void)?
+
     private let factView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBlue
@@ -58,12 +61,14 @@ final class OverviewSlideView: UIView {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .white
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.isScrollEnabled = false
         collectionView.register(DayForecastCollectionViewCell.self, forCellWithReuseIdentifier: DayForecastCollectionViewCell.identifier)
         return collectionView
     }()
 
     //MARK: - LifeCicle
     init(locationName: String) {
+//        self.locationName = locationName
         super.init(frame: CGRect.zero)
         backgroundColor = .white
         layout()
@@ -78,18 +83,8 @@ final class OverviewSlideView: UIView {
     //MARK: - Metods
     @objc private func hourForecastDetailButtonTap() {
         print("detail day button")
+        hourDetailAction?()
     }
-//    func taps() {
-//        showStatusButton.tapAction =  { [weak self] in
-//            self?.statusLabel.text = self?.statusText
-//            self?.endEditing(true)
-//        }
-//        logoutButton.tapAction =  { [weak self] in
-//            guard let self = self else {return}
-//            self.delegate?.didTapLogoutButton()
-//        }
-//
-//    }
 
     func setupCollectionViews(hourDataSource: UICollectionViewDataSource,
                               hourDelegate: UICollectionViewDelegate,

@@ -38,6 +38,12 @@ final class MainCoordinator {
         navCon.pushViewController(timeOfDayVC, animated: true)
     }
 
+
+    func showHourlyForecast(forecasts: [Indicators], timeZone: TimeZoneInfo?) {
+        let hourlyVC = controllersFactory.makeHourlyForecastViewController(forecasts: forecasts, timeZone: timeZone)
+        navCon.pushViewController(hourlyVC, animated: true)
+    }
+
 //    func showAlert(title: String, message: String, buttonText: String = "Ok") {
 //        // создаём объекты всплывающего окна
 //        let alert = UIAlertController(

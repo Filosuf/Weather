@@ -93,6 +93,8 @@ final class HourCollectionViewCell: UICollectionViewCell {
 
             conditionImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             conditionImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            conditionImage.heightAnchor.constraint(equalToConstant: 18),
+            conditionImage.widthAnchor.constraint(equalToConstant: 18),
 
             tempLabel.topAnchor.constraint(equalTo: conditionImage.bottomAnchor, constant: interval),
             tempLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),

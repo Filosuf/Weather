@@ -38,6 +38,7 @@ final class DateTimeFormatter {
         } else {
             dateFormatter.timeZone = .current
         }
+        dateFormatter.locale = Locale(identifier: "ru_RU")
         return dateFormatter.string(from: date)
     }
 }

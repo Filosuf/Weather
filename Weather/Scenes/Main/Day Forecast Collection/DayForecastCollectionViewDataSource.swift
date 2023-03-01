@@ -44,6 +44,11 @@ class DayForecastCollectionViewDataSource: NSObject, UICollectionViewDataSource,
         let iconName = Conditions.fetchIconName(with: condition)
         let iconImage = UIImage(named: iconName)
         let conditionTitle = Conditions.fetchTitle(with: condition)
+
+//        print("\(forecast.locationName ?? "") \(Date(timeIntervalSince1970: forecast.date))")
+//        print("Day = \(forecast.dayShort?.temp ?? 1000) Max = \(tempMax)")
+//        print("Night = \(forecast.nightShort?.temp ?? 1000) Min = \(tempMin)")
+
         cell.setupCell(date: dateShort,
                        conditionImage: iconImage,
                        probabilityOfPrecipitation: precProb,
@@ -71,6 +76,8 @@ class DayForecastCollectionViewDataSource: NSObject, UICollectionViewDataSource,
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let forecast = forecasts[indexPath.row]
+//        print("Current forecast. Day = \(forecast.dayShort?.temp); Night = \(forecast.nightShort?.temp)")
         coordinator.showTimeOfDayForecast(index: indexPath.row, in: forecasts, timeZone: timeZone)
     }
 }

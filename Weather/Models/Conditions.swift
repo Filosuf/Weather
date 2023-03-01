@@ -28,7 +28,10 @@ enum Conditions: String, CaseIterable {
     case thunderstormWithRain = "thunderstorm-with-rain"
     case thunderstormWithHail = "thunderstorm-with-hail"
 
-    static func fetchCondition(with name: String) -> Conditions {
+    static func fetchCondition(with name: String?) -> Conditions {
+        guard let name = name else {
+            return Conditions.clear
+        }
         let condition = Conditions.allCases.first { $0.rawValue == name }
         return condition ?? Conditions.clear
     }

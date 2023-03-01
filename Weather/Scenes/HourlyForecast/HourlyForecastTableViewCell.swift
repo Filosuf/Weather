@@ -10,30 +10,30 @@ import UIKit
 class HourlyForecastTableViewCell: UITableViewCell {
     // MARK: - Properties
     static let identifier = "HourlyForecastTableViewCell"
-    
+
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-        label.font = UIFont(name: "Rubik-Medium", size: 18)
+        label.textColor = .Text.text
+        label.font = UIFont.boldSystemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
     private let timeLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.604, green: 0.587, blue: 0.587, alpha: 1)
-        label.font = UIFont(name: "Rubik-Regular", size: 14)
+        label.textColor = .Text.textSecond
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
     private let tempLabel: UILabel = {
-            let label = UILabel()
-            label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
-            label.font = UIFont(name: "Rubik-Medium", size: 18)
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
+        let label = UILabel()
+        label.textColor = .Text.text
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     private let feelsLikeView = HourlyForecastIndicatorView()
     private let conditionView = HourlyForecastIndicatorView()
@@ -45,7 +45,7 @@ class HourlyForecastTableViewCell: UITableViewCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        stackView.spacing = 10
+        stackView.spacing = 8
         return stackView
     }()
 
@@ -53,6 +53,7 @@ class HourlyForecastTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
+        backgroundColor = .Main.backgroundCell
         layout()
     }
 
@@ -61,14 +62,16 @@ class HourlyForecastTableViewCell: UITableViewCell {
     }
 
     // MARK: - Methods
-    func setupCell() {
-        dateLabel.text = "Date"
-        timeLabel.text = "Time"
-        tempLabel.text = "Tempº"
-        feelsLikeView.setIndicator(image: UIImage(named: "moon")!, name: "По ощущению", value: "Valueº")
-        conditionView.setIndicator(image: UIImage(named: "moon")!, name: "Value", value: "")
-        windView.setIndicator(image: UIImage(named: "moon")!, name: "Ветер", value: "value")
-        probabilityOfPrecipitationView.setIndicator(image: UIImage(named: "moon")!, name: "Атмосферные осадки", value: "value")
+    func setupCell(forecast: HourForecastViewModel) {
+        dateLabel.text = forecast.date
+        timeLabel.text = forecast.time
+        tempLabel.text = forecast.temp
+        feelsLikeView.setIndicator(image: UIImage(named: "feelTemp"), name: "По ощущению", value: forecast.feelTemp)
+        conditionView.setIndicator(image: forecast.conditionImage, name: forecast.conditionTitle, value: "")
+        windView.setIndicator(image: UIImage(named: "wind"), name: "Ветер", value: forecast.wind)
+        probabilityOfPrecipitationView.setIndicator(image: UIImage(named: "rainSecond"),
+                                                    name: "Атмосферные осадки",
+                                                    value: forecast.probabilityOfPrecipitation)
     }
 
     private func layout() {

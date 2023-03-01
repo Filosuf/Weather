@@ -12,7 +12,7 @@ final class TimeOfDayForecastView: UIView {
     // MARK: - Properties
     private let timeOfDayLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
+        label.textColor = .Text.text
         label.font = UIFont.systemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -20,14 +20,13 @@ final class TimeOfDayForecastView: UIView {
 
     lazy var conditionImage: UIImageView = {
         let image = UIImageView()
-        image.frame.size = CGSize(width: 26, height: 32)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
 
     private let tempLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.154, green: 0.152, blue: 0.135, alpha: 1)
+        label.textColor = .Text.text
         label.font = UIFont.systemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -35,8 +34,8 @@ final class TimeOfDayForecastView: UIView {
 
     private let conditionLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor(red: 0.604, green: 0.587, blue: 0.587, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = .Text.text
+        label.font = UIFont.boldSystemFont(ofSize: 22)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -60,7 +59,6 @@ final class TimeOfDayForecastView: UIView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.spacing = 10
-        stackView.backgroundColor = .lightGray
         stackView.alignment = .center
         return stackView
     }()
@@ -69,6 +67,8 @@ final class TimeOfDayForecastView: UIView {
     init() {
         super.init(frame: CGRect.zero)
         layout()
+        backgroundColor = .Main.backgroundCell
+        layer.cornerRadius = 5
     }
 
     required init?(coder: NSCoder) {
@@ -84,9 +84,9 @@ final class TimeOfDayForecastView: UIView {
         conditionImage.image = UIImage(named: conditionImageName)
         tempLabel.text = "\(Int(forecast.temp.rounded()))º"
         conditionLabel.text = conditionTitle
-        let feelsLikeTemp = "\(forecast.feelsLike)º"
+        let feelsLikeTemp = "\(Int(forecast.feelsLike.rounded()))º"
         let uvIndex = "\(forecast.uvIndex) UV"
-        let windDirection = Directions.fetchDirection(with: forecast.description)
+        let windDirection = Directions.fetchDirection(with: forecast.windDir)
         let windDirectionLabel = Directions.fetchTitle(with: windDirection)
         let windSpeed = forecast.windSpeed
         let windTitle = "\(windSpeed)m/s \(windDirectionLabel)"
@@ -119,6 +119,9 @@ final class TimeOfDayForecastView: UIView {
         NSLayoutConstraint.activate([
             feelsLikeView.heightAnchor.constraint(equalToConstant: 46),
 
+            conditionImage.heightAnchor.constraint(equalToConstant: 32),
+            conditionImage.widthAnchor.constraint(equalToConstant: 32),
+            
             timeOfDayLabel.topAnchor.constraint(equalTo: topAnchor, constant: spaceInterval),
             timeOfDayLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: spaceInterval),
 
